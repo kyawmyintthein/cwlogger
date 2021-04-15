@@ -24,6 +24,9 @@ type Config struct {
 	// The name of the log group to write logs into. Required.
 	LogGroupName string
 
+	// Default value is true and it will try to create LogGroup in Cloudwatch
+	AutoCreateLogGroup bool
+
 	// An optional function to report errors that couldn't be automatically
 	// handled during a PutLogEvents API call and caused a log events to be
 	// dropped.
@@ -82,7 +85,7 @@ func New(config *Config) (*Logger, error) {
 
 	lg.streams = newLogStreams(lg)
 
-	if err := lg.createIfNotExists(); err != nil {
+	if err := lg.createIfNotExists(config); err != nil {
 		return nil, err
 	}
 	if err := lg.streams.new(); err != nil {
@@ -132,7 +135,10 @@ func (lg *Logger) worker() {
 	lg.done <- true
 }
 
-func (lg *Logger) createIfNotExists() error {
+func (lg *Logger) createIfNotExists(config *Config) error {
+	if !config.AutoCreatLogGroup {
+		return nil
+	}
 	_, err := lg.svc.CreateLogGroup(&cloudwatchlogs.CreateLogGroupInput{
 		LogGroupName: lg.name,
 	})
