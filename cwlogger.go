@@ -136,7 +136,7 @@ func (lg *Logger) worker() {
 }
 
 func (lg *Logger) createIfNotExists(config *Config) error {
-	if !config.AutoCreatLogGroup {
+	if !config.AutoCreateLogGroup {
 		return nil
 	}
 	_, err := lg.svc.CreateLogGroup(&cloudwatchlogs.CreateLogGroupInput{
