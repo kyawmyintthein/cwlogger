@@ -24,7 +24,7 @@ type Config struct {
 	// The name of the log group to write logs into. Required.
 	LogGroupName string
 
-	// Default value is true and it will try to create LogGroup in Cloudwatch
+	// Default value is false and this will try to create LogGroup in Cloudwatch, if the value is true
 	AutoCreateLogGroup bool
 
 	// An optional function to report errors that couldn't be automatically
